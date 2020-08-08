@@ -34,7 +34,7 @@ export default {
     return {
       url: "http://127.0.0.1:8000/api/personnels",
       personnels: [],
-      form: { first_name: "", last_name: "", email: "", isEdit: false },
+      form: { name: "", email: "", details: "", isEdit: false },
       loader: false
     };
   },

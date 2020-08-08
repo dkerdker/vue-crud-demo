@@ -82,15 +82,9 @@ export default {
       }
     },
     formValidation() {
-      // first name
-      if (document.getElementsByName("first_name")[0].value === "") {
-        alert("Enter first name");
-        return false;
-      }
-
-      // last name
-      if (document.getElementsByName("last_name")[0].value === "") {
-        alert("Enter last name");
+      // name
+      if (document.getElementsByName("name")[0].value === "") {
+        alert("Enter name");
         return false;
       }
 
@@ -100,13 +94,19 @@ export default {
         return false;
       }
 
+      // email
+      if (document.getElementsByName("details")[0].value === "") {
+        alert("Enter details");
+        return false;
+      }
+
       return true;
     },
     clearFormFields() {
       // clear form data
-      this.form.first_name = "";
-      this.form.last_name = "";
+      this.form.name = "";
       this.form.email = "";
+      this.form.details = "";
       this.form.isEdit = false;
 
       // clear form fields
