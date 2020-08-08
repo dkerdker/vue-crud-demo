@@ -2,25 +2,14 @@
   <div class="my-form">
     <form class="ui form">
       <div class="fields">
-        <div class="four wide field">
+        <div class="six wide field">
           <label>First Name</label>
           <input
             type="text"
-            name="first_name"
-            placeholder="First Name"
+            name="name"
+            placeholder="Name"
             @change="handleChange"
-            :value="form.first_name"
-          />
-        </div>
-
-        <div class="four wide field">
-          <label>Last Name</label>
-          <input
-            type="text"
-            name="last_name"
-            placeholder="Last Name"
-            @change="handleChange"
-            :value="form.last_name"
+            :value="form.name"
           />
         </div>
 
@@ -32,6 +21,17 @@
             placeholder="joe@gmail.com"
             @change="handleChange"
             :value="form.email"
+          />
+        </div>
+
+        <div class="six wide field">
+          <label>Details</label>
+          <input
+            type="text"
+            name="details"
+            placeholder="details"
+            @change="handleChange"
+            :value="form.details"
           />
         </div>
 

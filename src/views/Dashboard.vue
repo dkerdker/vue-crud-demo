@@ -48,8 +48,8 @@ export default {
       this.loader = true;
 
       axios.get(this.url).then(data => {
-        console.log("hello" + data.data);
-        this.personnels = data.data;
+        //console.log(data.data);
+        this.personnels = data.data.data;
         this.loader = false;
       });
     },
@@ -70,9 +70,9 @@ export default {
 
       axios
         .post(this.url, {
-          first_name: data.first_name,
-          last_name: data.last_name,
-          email: data.email
+          name: data.name,
+          email: data.email,
+          details: data.details
         })
         .then(() => {
           this.getPersonnel();
@@ -86,9 +86,9 @@ export default {
 
       axios
         .put(`${this.url}/${data.id}`, {
-          first_name: data.first_name,
-          last_name: data.last_name,
-          email: data.email
+          name: data.name,
+          email: data.email,
+          details: data.details
         })
         .then(() => {
           this.getPersonnel();
