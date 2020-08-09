@@ -1,5 +1,17 @@
 <template>
   <div class="my-form">
+    <form @submit.prevent="onFileSubmit" class="ui form" enctype="multipart/form-data">
+      <div class="fields">
+        <div class="six wide field">
+          <label>Import xlsx, xls, csv</label>
+          <input type="file" name="file" ref="file" @change="selectFile" />
+        </div>
+        <div class="two wide field">
+          <button class="tiny ui primary button submit-button">Import</button>
+        </div>
+      </div>
+    </form>
+
     <form class="ui form">
       <div class="fields">
         <div class="six wide field">
@@ -44,12 +56,15 @@
 </template>
 
 <script>
+import User from "../apis/User";
+
 export default {
   name: "MyForm",
   data() {
     return {
       btnName: "Save",
-      btnClass: "ui primary button submit-button"
+      btnClass: "ui primary button submit-button",
+      file: ""
     };
   },
   props: {
@@ -81,6 +96,33 @@ export default {
         this.clearFormFields();
       }
     },
+
+    selectFile() {
+      this.file = this.$refs.file.files[0];
+    },
+
+    onFileSubmit() {
+      if (this.fileValidation()) {
+        const formData = new FormData();
+        formData.append("file", this.file);
+
+        console.log("submit");
+        console.log(formData);
+
+        //call User.import()
+        User.import(formData)
+          .then(() => {
+            this.$emit("onFileSubmit");
+          })
+          .catch(error => {
+            alert("Failed to import " + error);
+          });
+
+        // clear form fields
+        this.clearFormFields();
+      }
+    },
+
     formValidation() {
       // name
       if (document.getElementsByName("name")[0].value === "") {
@@ -102,6 +144,24 @@ export default {
 
       return true;
     },
+
+    fileValidation() {
+      // var filePath = this.file.value;
+      // console.log("validating");
+      // console.log(filePath);
+      // // Allowing file type
+      // var allowedExtensions = /(\.xlsx|\.xls|\.csv|\.txt)$/i;
+
+      // if (!allowedExtensions.exec(filePath)) {
+      //   alert("Invalid file type");
+
+      //   this.clearFormFields();
+      //   return false;
+      // } else {
+      return true;
+      //}
+    },
+
     clearFormFields() {
       // clear form data
       this.form.name = "";

@@ -9,7 +9,7 @@
     </div>
 
     <div class="ui main container">
-      <MyForm :form="form" @onFormSubmit="onFormSubmit" />
+      <MyForm :form="form" @onFileSubmit="onFileSubmit" @onFormSubmit="onFormSubmit" />
       <PersonnelList :personnels="personnels" @onDelete="onDelete" @onEdit="onEdit" />
       <Loader v-if="loader" />
     </div>
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import User from "../apis/User";
 import MyForm from "@/components/MyForm";
 import Loader from "@/components/Loader";
@@ -32,7 +31,6 @@ export default {
   },
   data() {
     return {
-      url: "http://127.0.0.1:8000/api/personnels",
       personnels: [],
       form: { name: "", email: "", details: "", isEdit: false },
       loader: false
@@ -47,7 +45,7 @@ export default {
     getPersonnel() {
       this.loader = true;
 
-      axios.get(this.url).then(data => {
+      User.read().then(data => {
         //console.log(data.data);
         this.personnels = data.data.data;
         this.loader = false;
@@ -56,8 +54,7 @@ export default {
     deletePersonnel(id) {
       this.loader = true;
 
-      axios
-        .delete(`${this.url}/${id}`)
+      User.delete(id)
         .then(() => {
           this.getPersonnel();
         })
@@ -68,12 +65,7 @@ export default {
     createPersonnel(data) {
       this.loader = true;
 
-      axios
-        .post(this.url, {
-          name: data.name,
-          email: data.email,
-          details: data.details
-        })
+      User.create(data)
         .then(() => {
           this.getPersonnel();
         })
@@ -84,12 +76,7 @@ export default {
     editPersonnel(data) {
       this.loader = true;
 
-      axios
-        .put(`${this.url}/${data.id}`, {
-          name: data.name,
-          email: data.email,
-          details: data.details
-        })
+      User.update(data)
         .then(() => {
           this.getPersonnel();
         })
@@ -118,6 +105,9 @@ export default {
         // call create personnel
         this.createPersonnel(data);
       }
+    },
+    onFileSubmit() {
+      this.getPersonnel();
     }
   },
 
