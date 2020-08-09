@@ -156,10 +156,14 @@ export default {
       //   alert("Invalid file type");
 
       //   this.clearFormFields();
-      //   return false;
-      // } else {
-      return true;
-      //}
+      // return false;
+
+      if (!this.file) {
+        alert("Add file to import.");
+        return false;
+      } else {
+        return true;
+      }
     },
 
     clearFormFields() {
