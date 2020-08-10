@@ -11,7 +11,7 @@
     <div class="ui main container">
       <MyForm
         :form="form"
-        :searchResults="personnels"
+        v-model="personnels"
         @onSearchClear="getPersonnel"
         @onFileSubmit="onFileSubmit"
         @onFormSubmit="onFormSubmit"
@@ -57,6 +57,7 @@ export default {
         this.personnels = response.data;
       });
     },
+
     getPersonnel() {
       this.loader = true;
 

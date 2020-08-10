@@ -112,25 +112,15 @@ export default {
       c: "details"
     };
   },
-  props: {
-    form: {
-      type: Object
-    },
-    searchResults: {
-      type: Object
-    }
-  },
+  props: ["value", "form"],
   methods: {
     onSearchSubmit() {
       if (this.search.searchTerm) {
         console.log("do search");
         User.search(this.search)
           .then(results => {
-            this.$emit("onSearched");
-            //here
-
             console.log(results.data);
-            this.searchResults = results.data;
+            this.$emit("input", results.data);
           })
           .catch(error => {
             alert("Failed to search " + error);
