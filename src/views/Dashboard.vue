@@ -9,9 +9,19 @@
     </div>
 
     <div class="ui main container">
-      <MyForm :form="form" @onFileSubmit="onFileSubmit" @onFormSubmit="onFormSubmit" />
+      <MyForm
+        :form="form"
+        :searchResults="personnels"
+        @onSearchClear="getPersonnel"
+        @onFileSubmit="onFileSubmit"
+        @onFormSubmit="onFormSubmit"
+      />
       <PersonnelList :personnels="personnels" @onDelete="onDelete" @onEdit="onEdit" />
       <Loader v-if="loader" />
+
+      <div class="footer">
+        <pagination :data="personnels" @pagination-change-page="getResults"></pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -31,7 +41,7 @@ export default {
   },
   data() {
     return {
-      personnels: [],
+      personnels: {},
       form: { name: "", email: "", details: "", isEdit: false },
       loader: false
     };
@@ -42,12 +52,17 @@ export default {
     })
   },
   methods: {
+    getResults(page = 1) {
+      User.pageSelect(page).then(response => {
+        this.personnels = response.data;
+      });
+    },
     getPersonnel() {
       this.loader = true;
 
-      User.read().then(data => {
+      User.read().then(response => {
         //console.log(data.data);
-        this.personnels = data.data.data;
+        this.personnels = response.data;
         this.loader = false;
       });
     },
@@ -130,8 +145,18 @@ export default {
   margin-top: 60px;
 }
 
+.margin-form {
+  margin-bottom: 1rem !important;
+}
+
 .submit-button {
   margin-top: 24px !important;
+  float: right;
+}
+
+.import-button {
+  margin-top: 30px !important;
+  margin-right: 94px !important;
   float: right;
 }
 

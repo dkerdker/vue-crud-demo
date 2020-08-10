@@ -43,5 +43,17 @@ export default {
 
   import(formData) {
     return Api().post("/import", formData);
+  },
+
+  pageSelect(page) {
+    return Api().get("/personnels?page=" + page);
+  },
+
+  search(search) {
+    console.log(search)
+    return Api().post("/search", {
+      searchTerm: search.searchTerm,
+      searchIn: search.searchIn
+    });
   }
 };

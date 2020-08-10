@@ -1,16 +1,57 @@
 <template>
   <div class="my-form">
-    <form @submit.prevent="onFileSubmit" class="ui form" enctype="multipart/form-data">
-      <div class="fields">
-        <div class="six wide field">
-          <label>Import xlsx, xls, csv</label>
-          <input type="file" name="file" ref="file" @change="selectFile" />
+    <div class="ui equal width grid margin-form">
+      <div class="row">
+        <div class="column">
+          <form @submit.prevent="onSearchSubmit" class="ui form">
+            <div class="fields">
+              <div class="twelve wide field">
+                <label>Search</label>
+                <div class="ui search">
+                  <div class="ui icon input">
+                    <input
+                      class="prompt"
+                      type="text"
+                      @keyup.enter="onSearchSubmit"
+                      v-model="search.searchTerm"
+                      placeholder="Search"
+                    />
+                    <i class="search icon"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <section>
+            <div class="fields">
+              <div class="twelve wide field"></div>
+              <div class="column">
+                <input type="radio" v-model="search.searchIn" v-bind:value="a" />&nbsp;
+                <label>Name</label>&nbsp;
+                <input type="radio" v-model="search.searchIn" v-bind:value="b" />&nbsp;
+                <label>Email</label>&nbsp;
+                <input type="radio" v-model="search.searchIn" v-bind:value="c" />&nbsp;
+                <label>Details</label>&nbsp;
+              </div>
+            </div>
+          </section>
         </div>
-        <div class="two wide field">
-          <button class="tiny ui primary button submit-button">Import</button>
+
+        <div class="column">
+          <form @submit.prevent="onFileSubmit" class="ui form" enctype="multipart/form-data">
+            <div class="fields">
+              <div class="twelve wide field">
+                <label>Import xlsx, xls, csv</label>
+                <input type="file" name="file" ref="file" @change="selectFile" />
+              </div>
+              <div class="two wide field">
+                <button class="mini ui primary button import-button">Import</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-    </form>
+    </div>
 
     <form class="ui form">
       <div class="fields">
@@ -64,15 +105,42 @@ export default {
     return {
       btnName: "Save",
       btnClass: "ui primary button submit-button",
-      file: ""
+      file: "",
+      search: { searchIn: "", searchTerm: "" },
+      a: "name",
+      b: "email",
+      c: "details"
     };
   },
   props: {
     form: {
       type: Object
+    },
+    searchResults: {
+      type: Object
     }
   },
   methods: {
+    onSearchSubmit() {
+      if (this.search.searchTerm) {
+        console.log("do search");
+        User.search(this.search)
+          .then(results => {
+            this.$emit("onSearched");
+            //here
+
+            console.log(results.data);
+            this.searchResults = results.data;
+          })
+          .catch(error => {
+            alert("Failed to search " + error);
+          });
+      } else {
+        this.$emit("onSearchClear");
+        this.search.searchIn = "";
+      }
+    },
+
     handleChange(event) {
       const { name, value } = event.target;
       let form = this.form;
@@ -99,6 +167,7 @@ export default {
 
     selectFile() {
       this.file = this.$refs.file.files[0];
+      this.fileValidation();
     },
 
     onFileSubmit() {
@@ -146,20 +215,19 @@ export default {
     },
 
     fileValidation() {
-      // var filePath = this.file.value;
-      // console.log("validating");
-      // console.log(filePath);
-      // // Allowing file type
-      // var allowedExtensions = /(\.xlsx|\.xls|\.csv|\.txt)$/i;
-
-      // if (!allowedExtensions.exec(filePath)) {
-      //   alert("Invalid file type");
-
-      //   this.clearFormFields();
-      // return false;
+      var filePath = this.file.name;
+      console.log("validating");
+      console.log(filePath);
+      // Allowing file type
+      var allowedExtensions = /(\.xlsx|\.xls|\.csv|\.txt)$/i;
 
       if (!this.file) {
         alert("Add file to import.");
+        return false;
+      } else if (!allowedExtensions.exec(filePath)) {
+        alert("Invalid file type.");
+
+        this.clearFormFields();
         return false;
       } else {
         return true;

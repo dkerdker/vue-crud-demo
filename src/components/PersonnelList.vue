@@ -14,7 +14,7 @@
 
         <tbody>
           <Personnel
-            v-for="personnel in personnels"
+            v-for="personnel in personnels.data"
             :key="personnel.id"
             :personnel="personnel"
             @onDelete="onDelete"
@@ -35,7 +35,7 @@ export default {
   },
   props: {
     personnels: {
-      type: Array
+      type: Object
     }
   },
   methods: {
